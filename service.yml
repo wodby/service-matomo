@@ -1,0 +1,90 @@
+name: matomo
+type: service
+icon: matomo
+title: Matomo 4
+hostname: matomo
+scalable: true
+labels:
+- matomo
+- matomo4
+options:
+- version: 4
+  default: true
+containers:
+- name: matomo
+  image: wodby/matomo
+  main: true
+  resources:
+    request:
+      memory: 16
+  env:
+  - name: PHP_FPM_ENV_VARS
+    value: '["WODBY_APP_NAME","WODBY_APP_INSTANCE_NAME","WODBY_ENVIRONMENT_NAME","WODBY_ENVIRONMENT_TYPE","WODBY_BUILD_NUMBER"]'
+  - name: PHP_ERROR_REPORTING
+    value: 'E_ALL & ~E_DEPRECATED & ~E_STRICT'
+    envType: prod
+  - name: PHP_DISPLAY_ERRORS
+    value: 'Off'
+    envType: prod
+  - name: PHP_DISPLAY_STARTUP_ERRORS
+    value: 'Off'
+    envType: prod
+  - name: PHP_TRACK_ERRORS
+    value: 'Off'
+    envType: prod
+  ports:
+  - name: fpm
+    number: 9000
+    main: true
+    type: tcp
+
+links:
+- name: db
+  title: DBMS
+  required: true
+  env:
+  - name: DB_HOST
+    value: '{{link.database.host}}'
+  - name: DB_PORT
+    value: '{{link.database.port}}'
+  - name: DB_USER
+    value: '{{link.database.user.name}}'
+  - name: DB_NAME
+    value: '{{link.database.db.name}}'
+  - name: DB_PASSWORD
+    value: '{{link.database.user.password}}'
+    secret: true
+  - name: DB_DRIVER
+    value: '{{link.database.driver}}'
+  selectors:
+  - type: db
+    labels:
+    - mariadb
+  - type: db
+    labels:
+    - mysql
+  - type: db
+    labels:
+    - postgres
+
+volumes:
+- name: files
+  title: Files
+  shared: true
+  path: /mnt/files
+  size: 10
+
+integrations:
+- name: variable
+  title: Variable
+  type: variable
+  required: false
+  multiple: true
+  providers:
+  - name: newrelic
+    env:
+    - name: PHP_NEWRELIC_LICENSE
+      value: '{{integration.variables.NEWRELIC_LICENSE}}'
+      secret: true
+    - name: PHP_NEWRELIC_APPNAME
+      value: '{{wodby_app_name}}'
