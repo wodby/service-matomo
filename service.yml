@@ -11,6 +11,5 @@ options:
 - version: 4
   default: true
 containers:
-- name: matomo
+- name: php
   image: wodby/matomo
-  main: true
