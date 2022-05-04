@@ -3,6 +3,7 @@ type: service
 from: php
 icon: matomo
 title: Matomo 4
+update: auto
 hostname: matomo
 labels:
 - matomo
