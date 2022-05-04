@@ -8,7 +8,7 @@ labels:
 - matomo
 - matomo4
 options:
-- version: 4
+- version: '4'
   default: true
 containers:
 - name: php
