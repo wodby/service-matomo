@@ -14,6 +14,7 @@ options:
 
 build:
   connect: true
+  dockerfile: Dockerfile
   templates:
   - name: vanilla
     title: Vanilla Matomo
