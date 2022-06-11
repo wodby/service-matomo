@@ -21,3 +21,14 @@ build:
     repo: https://github.com/wodby/matomo-vanilla
     tag: ^4\.[0-9\.]+$
     pipeline: pipeline.yml
+
+actions:
+- name: update
+  title: Run update
+  args: 
+  - php
+  - console
+  - core:update
+  - '--yes'
+  type: post_deploy
+
