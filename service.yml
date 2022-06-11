@@ -19,6 +19,5 @@ build:
   - name: vanilla
     title: Vanilla Matomo
     repo: https://github.com/wodby/matomo-vanilla
-    branch: 4.x-dev
     tag: ^4\.[0-9\.]+$
     pipeline: pipeline.yml
