@@ -13,7 +13,6 @@ options:
   default: true
 
 build:
-  dockerfile: Dockerfile
   connect: true
   templates:
   - name: vanilla
