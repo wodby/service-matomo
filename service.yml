@@ -11,9 +11,14 @@ labels:
 options:
 - version: '4'
   default: true
-containers:
-- name: php
-  image: wodby/matomo
-  
-build: 
-  connect: false
+
+build:
+  dockerfile: Dockerfile
+  connect: true
+  templates:
+  - name: vanilla
+    title: Vanilla Matomo
+    repo: https://github.com/wodby/matomo-vanilla
+    branch: 4.x-dev
+    tag: ^4\.[0-9\.]+$
+    pipeline: pipeline.yml
