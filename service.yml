@@ -18,7 +18,7 @@ build:
   templates:
   - name: vanilla
     title: Vanilla Matomo
-    repo: https://github.com/wodby/matomo-vanilla
+    repo: https://github.com/matomo-org/matomo
     tag: ^4\.[0-9\.]+$
     pipeline: pipeline.yml
 
