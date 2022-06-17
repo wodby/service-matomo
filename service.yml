@@ -19,7 +19,7 @@ build:
   - name: vanilla
     title: Vanilla Matomo
     repo: https://github.com/matomo-org/matomo
-    tag: ^4\.[0-9\.]+$
+    tag: ~4
     pipeline: pipeline.yml
 
 actions:
