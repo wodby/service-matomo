@@ -26,9 +26,8 @@ actions:
 - name: update
   title: Run update
   args: 
-  - php
-  - console
-  - core:update
-  - '--yes'
+  - sh 
+  - -c
+  - 'test -f config/config.ini.php && php console core:update --yes'
   type: post_deploy
 
