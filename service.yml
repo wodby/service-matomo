@@ -28,6 +28,6 @@ actions:
   args: 
   - sh 
   - -c
-  - 'test -f config/config.ini.php && php console core:update --yes'
+  - 'test ! -f config/config.ini.php || php console core:update --yes'
   type: post_deploy
 
