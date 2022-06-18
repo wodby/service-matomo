@@ -4,7 +4,11 @@ FROM ${WODBY_BASE_IMAGE}
 ARG COPY_FROM
 COPY --chown=wodby:wodby ${COPY_FROM} /var/www/html
 
-RUN mkdir -p \
+USER root
+
+RUN set -ex; \
+    \
+    mkdir -p \
         /var/www/html/tmp/assets \
         /var/www/html/tmp/cache \
         /var/www/html/tmp/cache/tracker \
@@ -31,7 +35,6 @@ RUN mkdir -p \
         /var/www/html/tmp \
         /var/www/html/plugins; \
     \
-    chown www-data:www-data /var/www/html/matomo.js; \
-    chown wodby:www-data /var/www/html/config/config.ini.php; \
-    chmod 664 /var/www/html/config/config.ini.php
-        
+    chown www-data:www-data /var/www/html/matomo.js
+
+USER wodby
