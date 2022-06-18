@@ -4,11 +4,7 @@ FROM ${WODBY_BASE_IMAGE}
 ARG COPY_FROM
 COPY --chown=wodby:wodby ${COPY_FROM} /var/www/html
 
-RUN wget https://github.com/wodby/matomo/raw/master/geolite/GeoLite2-City.mmdb.gz; \
-    gunzip GeoLite2-City.mmdb.gz; \
-    mv GeoLite2-City.mmdb /var/www/html/misc/; \
-    \ 
-    mkdir -p \
+RUN mkdir -p \
         /var/www/html/tmp/assets \
         /var/www/html/tmp/cache \
         /var/www/html/tmp/cache/tracker \
