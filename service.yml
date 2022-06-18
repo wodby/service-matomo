@@ -12,6 +12,11 @@ options:
 - version: '4'
   default: true
 
+
+containers:
+- name: php
+  image: wodby/matomo
+  
 build:
   connect: true
   dockerfile: Dockerfile
