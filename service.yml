@@ -2,13 +2,12 @@ name: matomo
 type: service
 from: php
 icon: matomo
-title: Matomo 4
+title: Matomo 5
 scalable: false
 update: auto
 hostname: matomo
 labels:
 - matomo
-- matomo4
 options:
 - version: '8.3'
   default: true
@@ -20,7 +19,7 @@ build:
   - name: vanilla
     title: Vanilla Matomo
     repo: https://github.com/matomo-org/matomo
-    tag: ^4
+    tag: ^5
     pipeline: pipeline.yml
 
 actions:
