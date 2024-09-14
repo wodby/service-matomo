@@ -24,14 +24,14 @@ build:
 
 env:
 - name: MATOMO_DATABASE_USERNAME
-  value: '{{link.database.user.name}}'
+  value: '{{links.db.database.user.name}}'
 - name: MATOMO_DATABASE_PASSWORD
-  value: '{{link.database.user.password}}'
+  value: '{{links.db.database.user.password}}'
   secret: true
 - name: MATOMO_DATABASE_HOST
-  value: '{{link.database.host}}'
+  value: '{{links.db.database.host}}'
 - name: MATOMO_DATABASE_DBNAME
-  value: '{{link.database.db.name}}'
+  value: '{{links.db.database.db.name}}'
 
 actions:
 - name: update
