@@ -22,6 +22,17 @@ build:
     tag: ^5
     pipeline: pipeline.yml
 
+env:
+- name: MATOMO_DATABASE_USERNAME
+  value: '{{link.database.user.name}}'
+- name: MATOMO_DATABASE_PASSWORD
+  value: '{{link.database.user.password}}'
+  secret: true
+- name: MATOMO_DATABASE_HOST
+  value: '{{link.database.host}}'
+- name: MATOMO_DATABASE_DBNAME
+  value: '{{link.database.db.name}}'
+
 actions:
 - name: update
   title: Run update
