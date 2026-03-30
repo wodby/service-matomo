@@ -1,5 +1,6 @@
 name: matomo
 type: service
+from: php
 icon: matomo
 title: Matomo 5
 scalable: false
@@ -7,50 +8,30 @@ update: auto
 hostname: matomo
 labels:
 - matomo
-- piwik
-
 options:
-- version: '5'
+- version: '8.3'
   default: true
+  
+build:
+  connect: true
+  dockerfile: Dockerfile
+  templates:
+  - name: vanilla
+    title: Vanilla Matomo
+    repo: https://github.com/matomo-org/matomo
+    tag: ^5
+    pipeline: pipeline.yml
 
-containers:
-- name: matomo
-  image: wodby/matomo
-  main: true
-
-links:
-- name: db
-  title: DBMS
-  required: true
-  env:
-  - name: MATOMO_DATABASE_HOST
-    value: '{{link.database.host}}'
-  - name: MATOMO_DATABASE_USERNAME
-    value: '{{link.database.user.name}}'
-  - name: MATOMO_DATABASE_DBNAME
-    value: '{{link.database.db.name}}'
-  - name: MATOMO_DATABASE_PASSWORD
-    value: '{{link.database.user.password}}'
-    secret: true  
-  selectors:
-  - type: db
-    labels:
-    - mariadb
-  - type: db
-    labels:
-    - mysql
-- name: sendmail    
-  title: Mail Transfer Agent
-  required: false
-  env:
-  - name: MSMTP_HOST
-    value: '{{link.host}}'
-  - name: MSMTP_PORT
-    value: '{{link.port}}'
-  selectors:
-  - type: service
-    labels: 
-    - smtpd
+env:
+- name: MATOMO_DATABASE_USERNAME
+  value: '{{links.db.database.user.name}}'
+- name: MATOMO_DATABASE_PASSWORD
+  value: '{{links.db.database.user.password}}'
+  secret: true
+- name: MATOMO_DATABASE_HOST
+  value: '{{links.db.database.host}}'
+- name: MATOMO_DATABASE_DBNAME
+  value: '{{links.db.database.db.name}}'
 
 actions:
 - name: update
@@ -61,16 +42,3 @@ actions:
   - 'test ! -f config/config.ini.php || php console core:update --yes'
   type: post_deploy
 
-helm:
-  name: wodby
-  source: oci://registry-1.docker.io/wodby/matomo
-  chart: oci://registry-1.docker.io/wodby/matomo
-  version: 0.1.0
-  configurations:
-  - container: matomo
-    labels: podLabels
-    annotations: podAnnotations
-    env: envVars
-    resources: resources
-    volumes: extraVolumes
-    mounts: extraVolumeMounts
