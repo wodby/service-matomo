@@ -4,7 +4,6 @@ icon: matomo
 title: Matomo 5
 scalable: false
 update: auto
-hostname: matomo
 labels:
 - matomo
 - piwik
