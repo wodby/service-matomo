@@ -18,14 +18,6 @@ containers:
   image: wodby/matomo
   main: true
 
-endpoints:
-- name: fpm
-  ports:
-  - name: fpm
-    number: 9000
-    main: true
-    protocol: tcp
-
 links:
 - name: db
   title: DBMS
