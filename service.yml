@@ -4,7 +4,6 @@ from: php
 icon: matomo
 title: Matomo 5
 scalable: false
-update: auto
 
 labels:
 - matomo
