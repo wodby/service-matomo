@@ -12,7 +12,8 @@ labels:
 options:
 - version: '8.3'
   default: true
-  
+
+  eol: '2027-12-31T00:00:00+00:00'
 build:
   connect: true
   dockerfile: Dockerfile
@@ -37,8 +38,8 @@ env:
 actions:
 - name: update
   title: Run update
-  args: 
-  - sh 
+  args:
+  - sh
   - -c
   - 'test ! -f config/config.ini.php || php console core:update --yes'
   type: post_deploy
