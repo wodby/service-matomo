@@ -2,7 +2,7 @@ name: matomo
 type: service
 from: php
 fromVersionConstraint: "^1.0.0"
-fromVersion: "1.0.1"
+fromVersion: "1.0.3"
 icon: matomo
 title: Matomo 5
 scalable: false
