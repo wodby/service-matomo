@@ -3,8 +3,7 @@ type: service
 from: php
 fromVersionConstraint: "^1.0.0"
 fromVersion: "1.0.3"
-icon: matomo
-title: Matomo 5
+title: PHP (Matomo 5)
 scalable: false
 
 labels:
@@ -41,4 +40,3 @@ actions:
   - -c
   - 'test ! -f config/config.ini.php || php console core:update --yes'
   type: post_deploy
-
