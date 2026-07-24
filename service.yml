@@ -14,7 +14,7 @@ options:
 build:
   connect: true
   dockerfile: Dockerfile
-  templates:
+  boilerplates:
   - name: vanilla
     title: Vanilla Matomo
     repo: https://github.com/matomo-org/matomo

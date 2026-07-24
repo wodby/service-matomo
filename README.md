@@ -9,10 +9,10 @@ configuration for PHP (Matomo 5).
 - [Wodby service documentation](https://wodby.com/docs/2.0/services/)
 - [Service manifest reference](https://wodby.com/docs/2.0/services/template/)
 
-## Start with a template
+## Start with a boilerplate
 
-Use one of the source templates exposed by this service to start with
-compatible build configuration and Wodby CI:
+Use one of the boilerplates exposed by this service to start with compatible
+build configuration and Wodby CI:
 
 - [Vanilla Matomo](https://github.com/matomo-org/matomo)
 
@@ -28,7 +28,7 @@ compatible build configuration and Wodby CI:
 | Type | Application service |
 | Inherits from | [`php`](https://github.com/wodby/service-php) with version constraint `^1.0.0` |
 | Versions | `8.3` by default |
-| Application build | Git source connection enabled; Dockerfile: `Dockerfile`; starters: Vanilla Matomo |
+| Application build | Git source connection enabled; Dockerfile: `Dockerfile`; boilerplates: Vanilla Matomo |
 | Operations | 1 actions |
 
 ## Use this service
