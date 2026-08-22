@@ -26,7 +26,7 @@ build configuration and Wodby CI:
 | --- | --- |
 | Service name | `matomo` |
 | Type | Application service |
-| Inherits from | [`php`](https://github.com/wodby/service-php) with version constraint `^1.0.0` |
+| Inherits from | [`php`](https://github.com/wodby/service-php) with version constraint `^2.0.0` |
 | Versions | `8.3` by default |
 | Application build | Git source connection enabled; Dockerfile: `Dockerfile`; boilerplates: Vanilla Matomo |
 | Operations | 1 actions |
