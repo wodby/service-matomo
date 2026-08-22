@@ -15,7 +15,7 @@ jobs:
         key: 'composer-{{ hash "composer.lock" }}-v1'
 
     - run: wodby ci init $WODBY_BUILD_ID
-    - run: wodby ci run -v $HOME/.composer:/home/wodby/.composer -s matomo -- composer install -n --no-ansi
+    - run: wodby ci run -s matomo -- composer install -n --no-ansi
 
     - cache_save:
         key: 'composer-{{ hash "composer.lock" }}-v1'
