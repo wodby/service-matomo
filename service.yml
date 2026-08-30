@@ -2,7 +2,7 @@ name: matomo
 type: service
 from: php
 fromVersionConstraint: "^2.0.0"
-fromVersion: "2.0.2"
+fromVersion: "2.0.3"
 title: PHP (Matomo 5)
 scalable: false
 
