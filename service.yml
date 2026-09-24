@@ -40,3 +40,6 @@ actions:
   - -c
   - 'test ! -f config/config.ini.php || php console core:update --yes'
   type: post_deploy
+
+# Parent upgrades must not enable unvalidated workspace behavior.
+workspace: false
