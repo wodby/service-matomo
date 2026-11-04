@@ -1,20 +1,13 @@
-# PHP (Matomo 5) service for Kubernetes on Wodby
+# Matomo service for Kubernetes on Wodby
 
-Build and run PHP (Matomo 5) applications on Kubernetes with Wodby.
+Run Matomo web analytics on Kubernetes with Wodby.
 
 This repository defines the Wodby service manifests and operational
-configuration for PHP (Matomo 5).
+configuration for Matomo.
 
 - [Browse Wodby services](https://wodby.com/services)
 - [Wodby service documentation](https://wodby.com/docs/2.0/services/)
 - [Service manifest reference](https://wodby.com/docs/2.0/services/template/)
-
-## Start with a boilerplate
-
-Use one of the boilerplates exposed by this service to start with compatible
-build configuration and Wodby CI:
-
-- [Vanilla Matomo](https://github.com/matomo-org/matomo)
 
 ## Wodby stacks using this service
 
@@ -26,10 +19,21 @@ build configuration and Wodby CI:
 | --- | --- |
 | Service name | `matomo` |
 | Type | Application service |
-| Inherits from | [`php`](https://github.com/wodby/service-php) with version constraint `^3.0.0` |
-| Versions | `8.3` by default |
-| Application build | Git source connection enabled; Dockerfile: `Dockerfile`; boilerplates: Vanilla Matomo |
-| Operations | 1 actions |
+| Image | [`wodby/matomo`](https://github.com/wodby/matomo) `-apache` variant: Matomo, Apache and PHP-FPM, prebuilt |
+| Versions | `5` |
+| Endpoint | HTTP on port 80 |
+| Service links | Database (MariaDB or MySQL), required; Files storage, required; SMTP server |
+| Settings | Admin username, Admin password (required), Admin email (required), Website URL |
+| Volumes | `files`, shared |
+| Cron | `archive`, hourly |
+| Application build | None: the service runs the prebuilt image |
+| Operations | 1 action |
+
+## Upgrading from 2.x
+
+Versions 2.x built Matomo from a repository with a separate Nginx service. Version 3 runs the prebuilt image, keeps
+Matomo's settings on a files volume and installs Matomo itself. Apps on 2.x stay on it, because a new major is never
+applied automatically; moving an app to version 3 means creating a new app from the Matomo stack.
 
 ## Use this service
 
