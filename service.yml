@@ -11,7 +11,7 @@ labels:
 # The prebuilt wodby/matomo image: Matomo, Apache and PHP-FPM in one container.
 options:
 - version: '5'
-  tag: 5-apache-r15
+  tag: 5-apache-r16
   default: true
 
 endpoints:
