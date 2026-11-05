@@ -1,46 +1,181 @@
 name: matomo
 type: service
-from: php
+icon: matomo
+title: Matomo
+scalable: true
 guidance: GUIDANCE.md
-fromVersionConstraint: "^3.0.0"
-fromVersion: "3.2.5"
-title: PHP (Matomo 5)
-scalable: false
 
 labels:
 - matomo
+
+# The prebuilt wodby/matomo image: Matomo, Apache and PHP-FPM in one container.
 options:
-- version: '8.3'
+- version: '5'
+  tag: 5-apache-r16
   default: true
-build:
-  connect: true
-  dockerfile: Dockerfile
-  boilerplates:
-  - name: vanilla
-    title: Vanilla Matomo
-    repo: https://github.com/matomo-org/matomo
-    tag: ^5
-    pipeline: pipeline.yml
+
+endpoints:
+- name: http
+  ports:
+  - name: http
+    number: 80
+    protocol: http
+    main: true
+
+links:
+# Matomo supports MariaDB and MySQL.
+- name: db
+  title: Database
+  required: true
+  env:
+  - name: DB_HOST
+    value: '{{link.database.host}}'
+  - name: DB_PORT
+    value: '{{link.database.port}}'
+  - name: DB_NAME
+    value: '{{link.database.db.name}}'
+  - name: DB_USERNAME
+    value: '{{link.database.user.name}}'
+  - name: DB_PASSWORD
+    value: '{{link.database.user.password}}'
+    secret: true
+  selectors:
+  - type: db
+    labels:
+    - mariadb
+  - type: db
+    labels:
+    - mysql
+- name: files
+  title: Files storage
+  required: true
+  selectors:
+  - type: storage
+- name: sendmail
+  title: SMTP server
+  required: false
+  env:
+  - name: MSMTP_HOST
+    value: '{{link.host}}'
+  - name: MSMTP_PORT
+    value: '{{link.port}}'
+  selectors:
+  - type: service
+    labels:
+    - smtpd
+
+# Matomo's settings file, custom logos and Marketplace plugins. Every replica
+# and the archiving job read the same files, so the volume is shared.
+volumes:
+- name: files
+  title: Files
+  link: files
+  shared: true
+  size: 5
+  path: /mnt/files
+  import:
+    owner: 1000
+    group: 1000
+
+settings:
+# The superuser the first deployment creates. Matomo is installed from these
+# values instead of its web installer.
+- name: admin-username
+  title: Admin username
+  description: Login of the Matomo superuser created on the first deployment.
+  default: admin
+  var: MATOMO_ADMIN_USERNAME
+- name: admin-password
+  title: Admin password
+  description: Password of the Matomo superuser created on the first deployment. Change it in Matomo afterwards; this setting is not used again.
+  required: true
+  secret: true
+  var: MATOMO_ADMIN_PASSWORD
+- name: admin-email
+  title: Admin email
+  description: Email address of the Matomo superuser created on the first deployment.
+  required: true
+  var: MATOMO_ADMIN_EMAIL
+- name: website-url
+  title: Website URL
+  description: Address of the first website to track, such as https://www.example.com, added on the first deployment. When empty, Matomo asks for a website at the first sign-in.
+  var: MATOMO_SITE_URL
 
 env:
-- name: MATOMO_DATABASE_USERNAME
-  value: '{{links.db.database.user.name}}'
-- name: MATOMO_DATABASE_PASSWORD
-  value: '{{links.db.database.user.password}}'
+# The name of the first website.
+- name: MATOMO_SITE_NAME
+  value: '{{app.title}}'
+# Mixed into every password hash, API token and session. It never changes.
+- name: MATOMO_SALT
+  value: '{{matomo_salt}}'
   secret: true
-- name: MATOMO_DATABASE_HOST
-  value: '{{links.db.database.host}}'
-- name: MATOMO_DATABASE_DBNAME
-  value: '{{links.db.database.db.name}}'
+
+tokens:
+- name: matomo_salt
+  generate:
+    regex: '[0-9a-zA-Z]{64}'
 
 actions:
+# Installs Matomo on the first deployment and updates its database on later
+# ones, so the web installer is never used.
 - name: update
-  title: Run update
+  title: Install or update Matomo
   args:
-  - sh
-  - -c
-  - 'test ! -f config/config.ini.php || php console core:update --yes'
+  - matomo-update
   type: post_deploy
 
-# Parent upgrades must not enable unvalidated workspace behavior.
+# Reports are archived here rather than when someone views them.
+cron:
+- name: archive
+  title: Archive reports
+  command: matomo-archive
+  schedule: 5 * * * *
+
+deployment:
+  strategy: rolling
+  maxUnavailable: 0
+  maxSurge: 1
+  minReady: 10s
+  progressDeadline: 15m
+  shutdownGracePeriod: 30s
+
+# The chart's probes run the image's check-ready action, which checks Apache
+# and PHP-FPM.
+helm:
+  name: wodby
+  source: oci://registry-1.docker.io/wodby/php-fpm
+  chart: oci://registry-1.docker.io/wodby/php-fpm
+  version: 0.3.3
+  valueMappings:
+    serviceAccountName: serviceAccount.name
+    serviceAccountCreate: serviceAccount.create
+  values:
+  - name: containerPort.name
+    value: http
+  - name: containerPort.number
+    value: 80
+
+workloads:
+- name: main
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: '{{helm.release}}'
+  kind: deployment
+  primary: true
+  helm:
+    labels: podLabels
+    annotations: podAnnotations
+    volumes: extraVolumes
+    sidecars: sidecars
+  containers:
+  - name: php
+    image: wodby/matomo
+    # Gives the container WODBY_PRIMARY_URL and WODBY_HOSTS, Matomo's address
+    # and trusted hosts.
+    routeMetadata: true
+    helm:
+      resources: resources
+      env: envVars
+      mounts: extraVolumeMounts
+
 workspace: false
