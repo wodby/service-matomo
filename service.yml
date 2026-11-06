@@ -11,7 +11,7 @@ labels:
 # The prebuilt wodby/matomo image: Matomo, Apache and PHP-FPM in one container.
 options:
 - version: '5'
-  tag: 5-apache-r16
+  tag: 5-apache-r17
   default: true
 
 endpoints:
@@ -87,18 +87,22 @@ settings:
   var: MATOMO_ADMIN_USERNAME
 - name: admin-password
   title: Admin password
-  description: Password of the Matomo superuser created on the first deployment. Change it in Matomo afterwards; this setting is not used again.
+  description: Password of the Matomo superuser created on the first deployment.
+    Change it in Matomo afterwards; this setting is not used again.
   required: true
   secret: true
   var: MATOMO_ADMIN_PASSWORD
 - name: admin-email
   title: Admin email
-  description: Email address of the Matomo superuser created on the first deployment.
+  description: Email address of the Matomo superuser created on the first 
+    deployment.
   required: true
   var: MATOMO_ADMIN_EMAIL
 - name: website-url
   title: Website URL
-  description: Address of the first website to track, such as https://www.example.com, added on the first deployment. When empty, Matomo asks for a website at the first sign-in.
+  description: Address of the first website to track, such as 
+    https://www.example.com, added on the first deployment. When empty, Matomo 
+    asks for a website at the first sign-in.
   var: MATOMO_SITE_URL
 
 env:
