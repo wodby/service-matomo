@@ -118,12 +118,15 @@ tokens:
 
 actions:
 # Installs Matomo on the first deployment and updates its database on later
-# ones, so the web installer is never used.
+# ones, so the web installer is never used. Updates run before the new
+# version rolls out: the previous version keeps serving on the updated
+# database. Large log tables can take a while to alter.
 - name: update
   title: Install or update Matomo
   args:
   - matomo-update
-  type: post_deploy
+  type: pre_deploy
+  timeoutSeconds: 1800
 
 # Reports are archived here rather than when someone views them.
 cron:

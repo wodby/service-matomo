@@ -36,7 +36,8 @@ sessions are kept in the database.
 
 ## Installation and updates
 
-After every deployment the **Install or update Matomo** action runs `matomo-update`:
+On every deployment the **Install or update Matomo** action runs `matomo-update` in a job of the new version, before its
+pods are replaced (on the first deployment, right after the install):
 
 - **First deployment:** it installs Matomo into the empty database, as the web installer would. The superuser comes from
   the service's settings: `admin-username` (default `admin`, `MATOMO_ADMIN_USERNAME`), `admin-password` (required,
@@ -46,7 +47,8 @@ After every deployment the **Install or update Matomo** action runs `matomo-upda
 - Without an admin password or email, the action fails and installs nothing.
 - The installation never runs over existing tables: if the database has tables but `config.ini.php` is missing, the
   action fails instead.
-- **Later deployments:** it runs `php console core:update --yes`.
+- **Later deployments:** it runs `php console core:update --yes`. The previous version keeps serving on the updated
+  database until the new one is ready. If the update fails, the deployment stops before the rollout.
 - Changing the admin settings after the first deployment does not change the account; change it in Matomo.
 
 ## Archiving
@@ -65,4 +67,4 @@ and runs Matomo's other scheduled tasks.
 
 - **Administration > System > Diagnostics** shows Matomo's own checks.
 - `php console diagnostics:run` reports the state of the installation.
-- The deployment's post-deploy log shows the install or update output, and the cron job's log the archiving.
+- The deployment's log shows the install or update output, and the cron job's log the archiving.
